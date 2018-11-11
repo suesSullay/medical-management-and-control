@@ -5,6 +5,6 @@ export default {
   install (Vue, options) {
     Vue.prototype.wsConf = wsConf
     Vue.prototype.BaseUrl = axiosConfig.baseUrl
-    Vue.prototype.FileBase = axiosConfig.baseUrl + 'file/'
+    Vue.prototype.FileBase = axiosConfig.baseUrl + 'uploadFile/'
   }
 }
