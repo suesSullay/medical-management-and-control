@@ -1,7 +1,7 @@
 import axios from './util/axios'
 
-const createUser = () => axios.setAxiosPostPromise('user/')
+const test = (data) => axios.setAxiosPostPromise('task/', data)
 
 export default{
-  createUser
+  test
 }

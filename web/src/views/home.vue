@@ -8,13 +8,32 @@ import { mapActions } from 'vuex'
 export default {
   data () {
     return {
-      home: '新增'
+      home: 'test'
     }
   },
   methods: {
-    ...mapActions(['createUser']),
+    ...mapActions(['test']),
     create () {
-      this.createUser()
+      let users = {
+        'user1': {
+          'state': true,
+          'files': ['C:/file/123.txt']
+        },
+        'user2': {
+          'state': true,
+          'files': ['C:/file/123.txt', 'C:/31231/223.txt']
+        }
+      }
+      let data = {
+        name: '123',
+        createTime: new Date(),
+        updateTime: new Date(),
+        taskType: {
+          id: 1
+        },
+        users: JSON.stringify(users)
+      }
+      this.test(data)
     }
   }
 

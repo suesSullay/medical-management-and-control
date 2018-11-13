@@ -1,7 +1,7 @@
 import api from '../../service'
 const actions = {
-  async createUser ({ commit }) {
-    await api.create_user()
+  async test ({ commit }, data) {
+    await api.test(data)
   }
 }
 

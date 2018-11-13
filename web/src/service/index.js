@@ -1,4 +1,4 @@
 import user from './user'
 export default {
-  create_user: user.createUser
+  test: user.test
 }
