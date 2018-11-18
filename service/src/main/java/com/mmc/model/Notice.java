@@ -18,7 +18,6 @@ import lombok.Data;
  *
  */
 @Entity
-@Data
 public class Notice {
 	  @Id
 	  @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -29,6 +28,6 @@ public class Notice {
 	  private User user;
 	  
 	  private Date createTime;
-	  
-	  private String[] files; 
+	  //json格式 ['c://2323.txt','d://32131.zip']
+	  private String files; 
 }

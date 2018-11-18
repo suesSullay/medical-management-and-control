@@ -25,7 +25,7 @@ public class Expert {
 	  //性别
 	  private Boolean sex;
 	  //履历
-	  @OneToMany(mappedBy="records",cascade=CascadeType.ALL)
+	  @OneToMany(cascade=CascadeType.ALL)
 	  @JoinColumn(name="eid")
 	  private List<Record> records;
 }

@@ -14,6 +14,7 @@ Vue.use(config)
 Vue.use(ElementUI)
 Vue.use(mainCss)
 Vue.use(axios)
+
 new Vue({
   router,
   store,

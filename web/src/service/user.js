@@ -1,7 +1,7 @@
 import axios from './util/axios'
 
-const test = (data) => axios.setAxiosPostPromise('task/', data)
+const login = (options) => axios.setAxiosPostPromise('user/login/', options)
 
 export default{
-  test
+  login
 }

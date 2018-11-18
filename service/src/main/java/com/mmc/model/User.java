@@ -23,9 +23,9 @@ public class User {
   private String name;
   @Column(unique=true,nullable=false)
   private String userName;
-  @Column(unique=true,nullable=false)
+  @Column(nullable=false)
   private String passWord;
   @Enumerated(EnumType.ORDINAL)
-  @Column(unique=true,nullable=false)
+  @Column(nullable=false)
   private Rule rule;
 }

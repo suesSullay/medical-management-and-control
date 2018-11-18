@@ -1,7 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '../views/home.vue'
-import File from '../views/file.vue'
+import Login from '../views/login'
+import Task from '../views/task.vue'
+import Manage from '../views/manage.vue'
+import Message from '../views/message.vue'
+import Notice from '../views/notice.vue'
+import Expert from '../views/expert.vue'
+import Account from '../views/account.vue'
 
 Vue.use(Router)
 
@@ -11,13 +16,38 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home
+      name: 'login',
+      component: Login
     },
     {
-      path: '/file',
-      name: 'file',
-      component: File
+      path: '/manage',
+      name: 'manage',
+      component: Manage
+    },
+    {
+      path: '/task',
+      name: 'task',
+      component: Task
+    },
+    {
+      path: '/message',
+      name: 'message',
+      component: Message
+    },
+    {
+      path: '/notice',
+      name: 'notice',
+      component: Notice
+    },
+    {
+      path: '/expert',
+      name: 'expert',
+      component: Expert
+    },
+    {
+      path: '/account',
+      name: 'account',
+      component: Account
     }
   ]
 })

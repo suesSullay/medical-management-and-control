@@ -29,6 +29,13 @@ public class Task {
   @ManyToOne
   @JoinColumn(name="tid")
   private TaskType taskType;
+  
+  private String context;
+/**
+ * json 格式
+ * "[C:/3123.txt]"  
+ */
+  private String files;
   /**
    * 
    * user为用户ID

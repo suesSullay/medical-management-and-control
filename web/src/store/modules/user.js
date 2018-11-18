@@ -1,7 +1,8 @@
 import api from '../../service'
 const actions = {
-  async test ({ commit }, data) {
-    await api.test(data)
+  async login ({ commit }, { userName, passWord }) {
+    const result = await api.user.login({ userName: userName, passWord: passWord })
+    return result
   }
 }
 
