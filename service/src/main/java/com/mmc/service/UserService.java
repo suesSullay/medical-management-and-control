@@ -1,5 +1,6 @@
 package com.mmc.service;
 
+import com.mmc.model.Rule;
 import com.mmc.model.User;
 import com.mmc.repository.UserRepository;
 
@@ -30,5 +31,8 @@ public class UserService {
   }
   public User findByUserNameAndPassWord(String userName,String passWord) {
 	  return userRepository.findByUserNameAndPassWord(userName,passWord);
+  }
+  public List<User> findByRule(Rule rule){
+	  return userRepository.findByRule(rule);
   }
 }

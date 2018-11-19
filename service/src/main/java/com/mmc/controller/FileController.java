@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import com.mmc.model.Msg;
+
 @CrossOrigin
 @RestController
 public class FileController {
@@ -22,8 +25,9 @@ public class FileController {
     private String filePath;
 	
 	@PostMapping("/uploadFile")
-	public String multiUpload(HttpServletRequest request) {
+	public Msg multiUpload(HttpServletRequest request) {
 		File fileP = new File(filePath);
+		Msg msg = Msg.success();
 		if(!fileP.exists()){
 			System.out.println(fileP);
 			fileP.mkdirs();
@@ -32,24 +36,24 @@ public class FileController {
 	    for (int i = 0; i < files.size(); i++) {
 	        MultipartFile file = files.get(i);
 	        if (file.isEmpty()) {
-	            return "上传第" + (i++) + "个文件失败";
+	            return Msg.fail();
 	        }
 	        File dest = null;
 	        while(dest==null||dest.exists()) {
 		        String fileName = file.getOriginalFilename();
-		        var date = new Date();  
-		        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH时mm分ss秒");  
-		        fileName=sdf.format(date)+"  "+fileName;
-		        dest = new File(filePath+fileName);
+		        msg.add("fileName", fileName);
+		        String uuid= UUID.randomUUID().toString();
+		        msg.add("value", uuid+fileName);
+		        dest = new File(filePath+uuid+fileName);
 	        }
 	        try {
 	            file.transferTo(dest);
 	        } catch (IOException e) {
-	            return "上传第" + (i++) + "个文件失败";
+	            return Msg.fail();
 	        }
 	    }
 
-	    return "上传成功";
+	    return msg;
 
 	}
 }

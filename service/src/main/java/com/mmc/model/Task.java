@@ -29,7 +29,8 @@ public class Task {
   @ManyToOne
   @JoinColumn(name="tid")
   private TaskType taskType;
-  
+  private Date beginTime;
+  private Date endTime;
   private String context;
 /**
  * json 格式
@@ -49,7 +50,6 @@ public class Task {
    * 		"state":true,
    * 		"files":"['C:/file/123.txt']"
    * 	},
-   *		
    * }
    * 
    * 

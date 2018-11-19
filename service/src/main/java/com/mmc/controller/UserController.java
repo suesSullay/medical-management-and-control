@@ -1,9 +1,11 @@
 package com.mmc.controller;
 
 import com.mmc.model.Msg;
+import com.mmc.model.Rule;
 import com.mmc.model.User;
 import com.mmc.service.UserService;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +33,10 @@ public class UserController {
 		return Msg.fail();
 	}
 	return Msg.success().add("user", res);
+  }
+  @GetMapping("/common")
+  public Msg findCommonUser() {
+	  List<User> list = userService.findByRule(Rule.COMMON);
+	  return Msg.success().add("commonUsers", list);
   }
 }
