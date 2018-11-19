@@ -24,8 +24,22 @@ public class TaskService {
   public void delete(Task task) {
 	  taskRepository.delete(task);
   }
-  public Page<Task> findAll(int page,int size) {
-	Pageable pageable = PageRequest.of(page, size, Sort.by(new Order(Direction.DESC, "id")));
-    return taskRepository.findAll(pageable);
+  public Page<Task> findAll(String name,int tid,String state, int page,int size) {
+	  Pageable pageable = PageRequest.of(page, size, Sort.by(new Order(Direction.DESC, "id")));
+	  if("全部".equals(state)&&tid>0) {
+		  return taskRepository.findAll(name, tid,pageable);
+	  }else if("全部".equals(state)&&tid==-1) {
+		  return taskRepository.findAll(name,pageable);
+	  }else if("未完成".equals(state)&&tid>0) {
+		  return taskRepository.findAllNOEnd(name, tid, pageable);
+	  }else if("未完成".equals(state)&&tid==-1) {
+		  return taskRepository.findAllNOEnd(name, tid, pageable);
+	  }else if("完成".equals(state)&&tid>0) {
+		  return taskRepository.findAllEnd(name, tid, pageable);
+	  }else if("完成".equals(state)&&tid==-1) {
+		  return taskRepository.findAllEnd(name, pageable);
+	  }else {
+		  return taskRepository.findAll(name, tid,pageable);
+	  }
   }
 }

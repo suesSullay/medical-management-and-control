@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 import lombok.Data;
@@ -28,6 +29,7 @@ public class Notice {
 	  private User user;
 	  
 	  private Date createTime;
+	  @Lob
 	  //json格式 ['c://2323.txt','d://32131.zip']
 	  private String files; 
 }

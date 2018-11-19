@@ -36,6 +36,7 @@ public class Task {
  * json 格式
  * "[C:/3123.txt]"  
  */
+  @Lob
   private String files;
   /**
    * 
@@ -57,5 +58,5 @@ public class Task {
   @Lob
   private String users;
   private Integer userNum;
-  private Integer EndNum;
+  private Integer endNum;
 }

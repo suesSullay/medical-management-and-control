@@ -51,6 +51,7 @@
           </el-form-item>
           <el-form-item style="text-align:left;">
             <el-upload
+              ref="upload"
               :action="FileBase"
               :before-remove="fileBeforeRemove"
               :on-success="uploadSuccess">
@@ -82,10 +83,8 @@
     </el-dialog>
     <div class="top">
       <el-button class="create" type="primary" @click="create">新建安排</el-button>
-      <el-button>删除</el-button>
-      <el-button>移动到</el-button>
-      <el-select v-model="taskType" placeholder="所有类型" class="task-type">
-        <el-option label="全部" value="全部"></el-option>
+      <el-select v-model="taskType" placeholder="所有类型" class="task-type" @change="selectTaskType">
+        <el-option label="全部" value="-1"></el-option>
         <el-option
           v-for="item in taskTypes"
           :key="item.id"
@@ -93,18 +92,54 @@
           :value="item.id">
         </el-option>
       </el-select>
-      <el-select v-model="taskType" placeholder="提交情况">
+      <el-select v-model="state" placeholder="提交情况" @change="selectState">
         <el-option label="全部" value="全部"></el-option>
         <el-option label="完成" value="完成"></el-option>
         <el-option label="未完成" value="未完成"></el-option>
       </el-select>
       <el-input v-model="keyword" placeholder="输入关键字" class="keyword"></el-input>
-      <el-button type="primary">查询</el-button>
+      <el-button type="primary" @click="getTaskList(keyword, taskType, state)">查询</el-button>
     </div>
+    <el-table
+      :data="taskList"
+      style="width: 100%">
+      <el-table-column
+        prop="name"
+        label="任务名"
+        width="220">
+      </el-table-column>
+      <el-table-column
+        :formatter="timeFormatter"
+        prop="updateTime"
+        label="修改时间"
+        width="400">
+      </el-table-column>
+      <el-table-column
+        prop="taskType.name"
+        label="任务类型"
+        width="220">
+      </el-table-column>
+      <el-table-column
+        label="提交情况"
+        width="220">
+        <template slot-scope="scope">
+          <span style="color: #409EFF;">{{ scope.row.endNum }}</span>/<span>{{ scope.row.userNum }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        fixed="right"
+        label="操作">
+        <template slot-scope="scope">
+          <el-button @click="handleClick(scope.row)" type="text" size="small">查看详情</el-button>
+          <el-button type="text" size="small">删除</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script>
+import moment from 'moment'
 import { mapActions } from 'vuex'
 export default {
   data () {
@@ -122,22 +157,41 @@ export default {
       },
       createDialog: false,
       // 步骤
-      step: 1,
+      step: '1',
       // 新增任务类型名
       addTaskTypeName: '',
       // 查询关键字
       keyword: '',
-      userList: []
+      userList: [],
+      taskList: [],
+      state: ''
     }
   },
   mounted () {
     this.init()
   },
   methods: {
-    ...mapActions(['taskTypeList', 'createTaskType', 'commonUserList', 'createTask']),
+    ...mapActions(['taskTypeList', 'createTaskType', 'commonUserList', 'createTask', 'findTaskList']),
     init () {
       this.getTaskTypeList()
       this.getCommonUserList()
+      this.getTaskList()
+    },
+
+    selectState (val) {
+      this.getTaskList(this.keyword, this.taskType, this.state)
+    },
+    selectTaskType (val) {
+      this.getTaskList(this.keyword, this.taskType, this.state)
+    },
+    timeFormatter (row, column, cellValue, index) {
+      console.log(cellValue)
+      return moment(cellValue).format('YYYY-MM-DD hh:mm:ss')
+    },
+    getTaskList (name, tid, state) {
+      this.findTaskList({ name, tid, state }).then(res => {
+        this.taskList = res.data.data.taskPage.content
+      })
     },
     getTaskTypeList () {
       this.taskTypeList().then(res => {
@@ -146,7 +200,7 @@ export default {
     },
     create () {
       this.addTaskTypeName = ''
-      this.step = 1
+      this.step = '1'
       this.createDialog = true
     },
     stepSelect (key) {
@@ -182,7 +236,11 @@ export default {
       if (this.newTask.name && this.newTask.taskType && this.newTask.beginTime && this.newTask.endTime) {
         this.newTask.createTime = new Date()
         this.newTask.updateTime = new Date()
-        this.newTask.userNum = this.newTask.users.length
+        if (this.newTask.users) {
+          this.newTask.userNum = this.newTask.users.length
+        } else {
+          this.newTask.userNum = 0
+        }
         this.newTask.endNum = 0
         this.newTask.users = JSON.stringify(this.newTask.users)
         this.newTask.files = JSON.stringify(this.newTask.files)
@@ -193,6 +251,13 @@ export default {
               message: '新任务创建失败',
               type: 'error'
             })
+            this.$refs.upload.clearFiles()
+            this.createDialog = false
+            this.newTask = { taskType: { id: null }, files: [] }
+          } else {
+            this.$refs.upload.clearFiles()
+            this.newTask = { taskType: { id: null }, files: [] }
+            this.createDialog = false
           }
         })
       } else {

@@ -26,8 +26,8 @@ public class TaskController {
   @Autowired
   TaskService taskService;
   @GetMapping("/all")
-  public Msg findALL(@RequestParam(value="page",defaultValue="1") int page,@RequestParam(value="page",defaultValue="10m") int size) {
-	Page<Task> taskPage = taskService.findAll(page, size);
+  public Msg findALL(@RequestParam(value="name",defaultValue="")String name, @RequestParam(value="tid",defaultValue="-1") int tid,@RequestParam(value="state",defaultValue="全部")String state,@RequestParam(value="page",defaultValue="0") int page,@RequestParam(value="size",defaultValue="7") int size) {
+	Page<Task> taskPage = taskService.findAll(name, tid, state, page, size);	
 	return Msg.success().add("taskPage", taskPage);
   }
   @PostMapping("/")
