@@ -4,7 +4,7 @@ const actions = {
     const result = await api.task.createTask(task)
     return result
   },
-  async findTaskList ({ commit }, { name, tid, state, page, size }) {
+  async findTaskList ({ commit }, { name, tid, state, user, page, size }) {
     let options = {}
     if (name) {
       options['name'] = name
@@ -14,6 +14,9 @@ const actions = {
     }
     if (state) {
       options['state'] = state
+    }
+    if (user) {
+      options['user'] = user
     }
     if (page) {
       options['page'] = page
