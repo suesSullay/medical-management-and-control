@@ -32,7 +32,6 @@ public class TaskService {
   }
   public Page<Task> findAll(String name,int tid,String state,String user,  int page,int size) {
 	  Pageable pageable = PageRequest.of(page, size, Sort.by(new Order(Direction.DESC, "id")));
-	  System.out.println(user);
 	  Specification<Task> specification = new Specification<Task>() {
           @Override
           public Predicate toPredicate(Root<Task> root, CriteriaQuery<?> query, CriteriaBuilder cb) {

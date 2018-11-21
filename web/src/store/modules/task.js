@@ -4,6 +4,10 @@ const actions = {
     const result = await api.task.createTask(task)
     return result
   },
+  async deleteTask ({ commit }, task) {
+    const result = await api.task.deleteTask(task)
+    return result
+  },
   async findTaskList ({ commit }, { name, tid, state, user, page, size }) {
     let options = {}
     if (name) {

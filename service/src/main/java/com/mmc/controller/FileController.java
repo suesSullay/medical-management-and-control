@@ -1,17 +1,26 @@
 package com.mmc.controller;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -55,5 +64,32 @@ public class FileController {
 
 	    return msg;
 
+	}
+	@GetMapping("/download")
+	public void downloadFileByOutputStream(@RequestParam("value") String value,@RequestParam("fileName") String fileName,HttpServletRequest request, HttpServletResponse response) {
+	 
+		 response.setCharacterEncoding(request.getCharacterEncoding());
+	        response.setContentType("application/octet-stream");
+	        FileInputStream fis = null;
+	        try {
+	            File file = new File(filePath+value);
+	            fis = new FileInputStream(file);
+	            response.setHeader("Content-Disposition", "attachment; filename="+fileName);
+	            IOUtils.copy(fis,response.getOutputStream());
+	            response.flushBuffer();
+	        } catch (FileNotFoundException e) {
+	            e.printStackTrace();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        } finally {
+	            if (fis != null) {
+	                try {
+	                    fis.close();
+	                } catch (IOException e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	        }
+	 
 	}
 }

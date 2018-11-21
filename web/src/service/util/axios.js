@@ -8,8 +8,8 @@ axios.defaults.headers['Cache-Control'] = 'no-cache,no-store,must-revalidate,max
 // axios.defaults.fileLoadUrl = localStorage.getItem('fileLoadUrl')
 
 export default {
-  setAxiosGetPromise: (url, params = {}) => {
-    return axios.get(url, { params: params }).then(response => {
+  setAxiosGetPromise: (url, params = {}, responseType) => {
+    return axios.get(url, { params: params, responseType: responseType }).then(response => {
       return response
     }).catch(err => {
       throw err
