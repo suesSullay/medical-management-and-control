@@ -455,8 +455,12 @@ export default {
       this.step = 1
       this.detailsDialog = true
       this.newTask = row
-      this.newTask['files'] = JSON.parse(row.files)
-      this.newTask['users'] = JSON.parse(row.users)
+      try {
+        this.newTask['files'] = JSON.parse(row.files)
+        this.newTask['users'] = JSON.parse(row.users)
+      } catch (error) {
+
+      }
     },
     handleDeleteTask (row) {
       this.$confirm('此操作将永久删除该任务, 是否继续?', '提示', {

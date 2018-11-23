@@ -6,9 +6,9 @@
       width="80%"
       top="50px">
       <el-form :model="newNotice" style="margin-top:10px;">
-        <el-form-item label="任务名称" style="display:inline-block; width:50%">
-          <el-input v-model="newNotice.name" placeholder="必填" style="width:80%" v-if="rule!=='ROOT'"></el-input>
-          <el-input v-model="newNotice.name" placeholder="必填" style="width:80%" v-else disabled></el-input>
+        <el-form-item label="任务名称" style="display:inline-block; width:100%">
+          <el-input v-model="newNotice.name" placeholder="必填" style="width:91%" v-if="rule!=='ROOT'"></el-input>
+          <el-input v-model="newNotice.name" placeholder="必填" style="width:91%" v-else disabled></el-input>
         </el-form-item>
         <el-form-item label="备选内容">
           <el-input
