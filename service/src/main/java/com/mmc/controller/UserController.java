@@ -39,4 +39,14 @@ public class UserController {
 	  List<User> list = userService.findByRule(Rule.COMMON);
 	  return Msg.success().add("commonUsers", list);
   }
+  @GetMapping("/all")
+  public Msg findAll() {
+	  List<User> list = userService.findAll();
+	  return Msg.success().add("userList", list);
+  }
+  @GetMapping("/")
+  public Msg findByName(@RequestParam("name") String name) {
+	  User user = userService.findByName(name);
+	  return Msg.success().add("user", user);
+  }
 }

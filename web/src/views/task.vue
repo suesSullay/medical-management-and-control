@@ -238,6 +238,10 @@
               <el-button size="small" type="primary">添加附件</el-button>
             </el-upload>
           </el-form-item>
+          <div v-for="file in newTask.files" :key="file.value" class="file"><span>{{file.fileName}}</span>
+            <el-button v-if="rule==='ROOT'" type="text" @click="removeFile(file)"><i class="el-icon-close"></i></el-button>
+            <el-button v-else type="text" @click="downloadFile(file)">下载</el-button>
+          </div>
         </div>
         <el-table
           max-height="450"
@@ -462,6 +466,11 @@ export default {
       }).then(() => {
         this.deleteTask(row).then(() => {
           this.init()
+          let message = {}
+          message['createTime'] = new Date()
+          message['messageType'] = 'TASK'
+          message['content'] = '管控中心删除了任务' + row.name
+          this.createMessage(message)
         })
         this.$message({
           type: 'success',

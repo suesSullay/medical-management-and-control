@@ -7,6 +7,14 @@ const actions = {
   async commonUserList ({ commit }) {
     const result = await api.user.commonUserList()
     return result
+  },
+  async findUserList ({ commit }) {
+    const result = await api.user.userList()
+    return result
+  },
+  async findUserByName ({ commit }, { name }) {
+    const result = await api.user.userByName({ name })
+    return result
   }
 }
 

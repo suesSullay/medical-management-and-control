@@ -35,4 +35,7 @@ public class UserService {
   public List<User> findByRule(Rule rule){
 	  return userRepository.findByRule(rule);
   }
+  public User findByName(String name) {
+	  return userRepository.findByName(name);
+  }
 }

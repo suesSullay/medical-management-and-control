@@ -19,10 +19,13 @@ import lombok.Data;
  *
  */
 @Entity
+@Data
 public class Notice {
 	  @Id
 	  @GeneratedValue(strategy=GenerationType.IDENTITY)
 	  private Integer id;
+	  private String name;
+	  private String context;
 	  @ManyToOne
 	  @JoinColumn(name="uid")
 	  //建立用户
