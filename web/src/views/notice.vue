@@ -111,7 +111,6 @@ export default {
         files: []
       },
       createDialog: false,
-      detailsDialog: false,
       noticeList: [],
       page: 0,
       noticeListNum: 0
@@ -208,13 +207,11 @@ export default {
               })
               this.$refs.upload.clearFiles()
               this.createDialog = false
-              this.detailsDialog = false
               this.newNotice = { files: [] }
             } else {
               this.$refs.upload.clearFiles()
               this.newNotice = { files: [] }
               this.createDialog = false
-              this.detailsDialog = false
               this.init()
             }
           })
@@ -222,7 +219,7 @@ export default {
       } else {
         this.$message({
           showClose: true,
-          message: '请检查新任务信息',
+          message: '请检查新闻信息',
           type: 'error'
         })
       }

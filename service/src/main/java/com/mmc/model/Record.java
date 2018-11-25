@@ -24,5 +24,8 @@ public class Record {
 	  private Integer id;
 	  //添加时间
 	  private Date createTime;
-	  private String content;
+	  private Date endTime;
+	  private String type;
+	  private String hospital;
+	  private String context;
 }
