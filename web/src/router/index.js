@@ -7,6 +7,7 @@ import Message from '../views/message.vue'
 import Notice from '../views/notice.vue'
 import Expert from '../views/expert.vue'
 import Account from '../views/account.vue'
+import CallBoard from '../views/callBoard.vue'
 
 Vue.use(Router)
 
@@ -48,6 +49,11 @@ export default new Router({
       path: '/account',
       name: 'account',
       component: Account
+    },
+    {
+      path: '/callBoard',
+      name: 'callBoard',
+      component: CallBoard
     }
   ]
 })

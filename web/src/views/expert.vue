@@ -264,6 +264,11 @@ export default {
         delete i.records
         delete i.recordNum
         i['姓名'] = i.name
+        if (i.sex === 1) {
+          i['性别'] = '女'
+        } else {
+          i['性别'] = '男'
+        }
         i['生日'] = i.birthday
         i['单位'] = i.company
         i['职务/职称'] = i.post
@@ -272,11 +277,6 @@ export default {
         i['电子邮箱'] = i.mail
         i['证件号码'] = i.idNo
         i['专家简介'] = i.context
-        if (i.sex === 1) {
-          i['性别'] = '女'
-        } else {
-          i['性别'] = '男'
-        }
         delete i.name
         delete i.birthday
         delete i.company

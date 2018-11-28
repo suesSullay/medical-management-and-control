@@ -352,6 +352,7 @@
 <script>
 import moment from 'moment'
 import { mapActions } from 'vuex'
+import _ from 'lodash'
 export default {
   data () {
     return {
@@ -717,9 +718,12 @@ export default {
         if (!this.newTask.endNum) {
           this.newTask.endNum = 0
         }
-        this.newTask.users = JSON.stringify(this.newTask.users)
-        this.newTask.files = JSON.stringify(this.newTask.files)
-        this.createTask(this.newTask).then(res => {
+        let temp = _.cloneDeep(this.newTask)
+        // this.newTask.users = JSON.stringify(this.newTask.users)
+        // this.newTask.files = JSON.stringify(this.newTask.files)
+        temp.users = JSON.stringify(temp.users)
+        temp.files = JSON.stringify(temp.files)
+        this.createTask(temp).then(res => {
           if (res.data.code !== 100) {
             this.$message({
               showClose: true,

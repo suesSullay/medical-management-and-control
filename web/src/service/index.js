@@ -5,6 +5,7 @@ import file from './file'
 import message from './message'
 import notice from './notice'
 import expert2 from './expert'
+import callBoard from './callBoard'
 export default {
   user,
   taskType,
@@ -12,5 +13,6 @@ export default {
   file,
   message,
   notice,
-  expert2
+  expert2,
+  callBoard
 }
