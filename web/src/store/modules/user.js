@@ -17,7 +17,7 @@ const actions = {
     return result
   },
   async createUser ({ commit }, user) {
-    const result = await api.user.creareUser(user)
+    const result = await api.user.createUser(user)
     return result
   }
 }
