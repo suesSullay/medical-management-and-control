@@ -1,8 +1,9 @@
 <template>
   <div class="task">
     <el-dialog
+      :close-on-click-modal="false"
       :visible.sync="taskUserDetailsDialog"
-      :show-close="false"
+      :show-close="true"
       width="40%"
       top="200px">
       <h1 style="margin-bottom:30px;">{{taskUserDetails.name}}提交详情</h1>
@@ -11,16 +12,17 @@
       </div>
     </el-dialog>
     <el-dialog
+      :close-on-click-modal="false"
       :visible.sync="detailsDialog"
-      :show-close="false"
+      :show-close="true"
       width="80%"
       top="50px">
-      <el-menu default-active="1" mode="horizontal" @select="stepSelect">
+      <el-menu :default-active="step" mode="horizontal" @select="stepSelect">
         <el-menu-item index="1">基本信息</el-menu-item>
         <el-menu-item index="2" v-show="rule=='ROOT'">提交记录</el-menu-item>
       </el-menu>
       <el-form :model="newTask" style="margin-top:10px;">
-        <div v-show="step==1">
+        <div v-show="step=='1'">
           <el-form-item label="任务类型" style="display:inline-block; width:50%">
             <el-select v-model="newTask.taskType.id" placeholder="必填" style="width:80%" v-if="rule==='ROOT'">
               <el-option
@@ -126,10 +128,10 @@
 
           <el-button v-if="rule!=='ROOT'" type="primary" @click="createNewTask">完成创建</el-button>
         </div>
-        <div v-show="step==2&&!reassign" style="text-align: left; margin:10px;"><el-button type="primary" @click="reassignClick">重新指派</el-button></div>
+        <div v-show="step=='2'&&!reassign" style="text-align: left; margin:10px;"><el-button type="primary" @click="reassignClick">重新指派</el-button></div>
         <el-table
           max-height="450"
-          v-show="step==2&&reassign"
+          v-show="step=='2'&&reassign"
           ref="userListTable"
           :data="userList"
           style="width: 100%"
@@ -143,10 +145,10 @@
             label="名称">
           </el-table-column>
         </el-table>
-        <el-button v-show="step==2&&reassign" type="primary" @click="confirmReassign">确定</el-button>
+        <el-button v-show="step=='2'&&reassign" type="primary" @click="confirmReassign">确定</el-button>
         <el-table
           max-height="450"
-          v-show="step==2&&!reassign"
+          v-show="step=='2'&&!reassign"
           :data="newTask.users"
           style="width: 100%">
           <el-table-column
@@ -161,9 +163,15 @@
             width="300">
           </el-table-column>
           <el-table-column
+            :formatter="isConfirmFormatter"
+            property="isConfirm"
+            label="是否查看"
+            width="200">
+          </el-table-column>
+          <el-table-column
             property="state"
             label="提交情况"
-            width="300">
+            width="200">
           </el-table-column>
           <el-table-column
             fixed="right"
@@ -174,23 +182,24 @@
             </template>
           </el-table-column>
         </el-table>
-        <div v-show="step==2&&!reassign" style="margin-top:10px;">
+        <div v-show="step=='2'&&!reassign" style="margin-top:10px;">
           <el-button @click="detailsDialog=false">取消</el-button>
           <el-button type="primary" @click="createNewTask">完成创建</el-button>
         </div>
       </el-form>
     </el-dialog>
     <el-dialog
+      :close-on-click-modal="false"
       :visible.sync="createDialog"
-      :show-close="false"
+      :show-close="true"
       width="80%"
       top="50px">
-      <el-menu default-active="1" mode="horizontal" @select="stepSelect">
+      <el-menu :default-active="step" mode="horizontal" @select="stepSelect">
         <el-menu-item index="1">基本信息</el-menu-item>
         <el-menu-item index="2">指派给</el-menu-item>
       </el-menu>
       <el-form :model="newTask" style="margin-top:10px;">
-        <div v-show="step==1">
+        <div v-show="step=='1'">
           <el-form-item label="任务类型" style="display:inline-block; width:50%">
             <el-select v-model="newTask.taskType.id" placeholder="必填" style="width:80%">
               <el-option
@@ -245,7 +254,7 @@
         </div>
         <el-table
           max-height="450"
-          v-show="step==2"
+          v-show="step=='2'"
           ref="userListTable"
           :data="userList"
           style="width: 100%"
@@ -259,7 +268,7 @@
             label="名称">
           </el-table-column>
         </el-table>
-        <div v-show="step==2" style="margin-top:10px;">
+        <div v-show="step=='2'" style="margin-top:10px;">
           <el-button @click="createDialog=false">取消</el-button>
           <el-button type="primary" @click="createNewTask">完成创建</el-button>
         </div>
@@ -362,7 +371,7 @@ export default {
       detailsDialog: false,
       taskUserDetailsDialog: false,
       // 步骤
-      step: 1,
+      step: '1',
       // 新增任务类型名
       addTaskTypeName: '',
       // 查询关键字
@@ -374,21 +383,26 @@ export default {
       rule: '',
       user: '',
       taskListNum: 0,
-      taskUserDetails: ''
+      taskUserDetails: '',
+      userFileList: []
     }
   },
   computed: {
-    userFileList: function () {
-      let temp = []
-      if (this.newTask['users']) {
-        this.newTask['users'].forEach(user => {
-          if (user.name === this.user) {
-            temp = user.files
-          }
-        })
-      }
-      return temp
-    }
+    // userFileList: function () {
+    //   let temp = []
+    //   if (this.newTask['users']) {
+    //     this.newTask['users'].forEach(user => {
+    //       if (user.name === this.user) {
+    //         if (user.files) {
+    //           temp = user.files
+    //         } else {
+    //           temp = []
+    //         }
+    //       }
+    //     })
+    //   }
+    //   return temp
+    // }
   },
   mounted () {
     this.rule = sessionStorage.getItem('rule')
@@ -452,7 +466,7 @@ export default {
     handleTaskDetails (row) {
       this.reassign = false
       this.addTaskTypeName = ''
-      this.step = 1
+      this.step = '1'
       this.detailsDialog = true
       this.newTask = row
       try {
@@ -460,6 +474,26 @@ export default {
         this.newTask['users'] = JSON.parse(row.users)
       } catch (error) {
 
+      }
+      let temp = []
+      if (this.newTask['users']) {
+        this.newTask['users'].forEach(user => {
+          if (user.name === this.user) {
+            if (user.files) {
+              temp = user.files
+            } else {
+              temp = []
+            }
+            user.isConfirm = '是'
+            this.newTask.users = JSON.stringify(this.newTask.users)
+            this.newTask.files = JSON.stringify(this.newTask.files)
+            this.createTask(this.newTask).then(res => {
+              this.newTask.users = JSON.parse(this.newTask.users)
+              this.newTask.files = JSON.parse(this.newTask.files)
+            })
+          }
+        })
+        this.userFileList = temp
       }
     },
     handleDeleteTask (row) {
@@ -515,7 +549,7 @@ export default {
     },
     create () {
       this.addTaskTypeName = ''
-      this.step = 1
+      this.step = '1'
       this.createDialog = true
       this.newTask = {
         taskType: {
@@ -543,8 +577,10 @@ export default {
           console.log(user.files)
           if (user.files && user.files.length > 0) {
             user.files.push(res.data)
+            console.log(user.files)
           } else {
             user.files = [res.data]
+            console.log(user.files)
             this.newTask['endNum'] = this.newTask['endNum'] + 1
             console.log(this.newTask['endNum'])
             user.state = '完成'
@@ -552,6 +588,19 @@ export default {
           user.updateTime = new Date()
         }
       })
+      let temp = []
+      if (this.newTask['users']) {
+        this.newTask['users'].forEach(user => {
+          if (user.name === this.user) {
+            if (user.files) {
+              temp = user.files
+            } else {
+              temp = []
+            }
+          }
+        })
+        this.userFileList = temp
+      }
       this.newTask['updateTime'] = new Date()
     },
     fileBeforeRemoveSub (file, files) {
@@ -610,6 +659,11 @@ export default {
     },
     userListSelectionChange (val) {
       this.newTask['users'] = val
+      this.newTask['users'].forEach(user => {
+        if (!user.isConfirm) {
+          user.isConfirm = '否'
+        }
+      })
     },
     toggleSelection (rows) {
       if (rows) {
@@ -619,6 +673,13 @@ export default {
         })
       } else {
         this.$refs.userListTable.clearSelection()
+      }
+    },
+    isConfirmFormatter (row, column, cellValue, index) {
+      if (!cellValue) {
+        return '否'
+      } else {
+        return cellValue
       }
     },
     createNewTask () {

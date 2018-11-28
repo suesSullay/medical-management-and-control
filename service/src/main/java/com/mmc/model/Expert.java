@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -23,15 +24,14 @@ public class Expert {
 	  private String name;
 	  private String birthday;
 	  private String company;
-	  //职务
+	  //职务/职称
 	  private String post;
-	  //职称
-	  private String title;
 	  //专业
 	  private String major;
 	  private String tel;
 	  private String mail;
 	  private String idNo;
+	  @Lob
 	  private String context;
 	  //添加时间
 	  private Date createTime;

@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form :model="formInfo">
-      <h1>成都医疗管控中心</h1>
+      <h1>四川省中医医疗质量控制管理系统</h1>
       <el-form-item>
         <el-input v-model="formInfo.userName" placeholder="请输入账号"></el-input>
       </el-form-item>
@@ -66,7 +66,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 29.2%;
+    width: 35%;
     height: 43.4%;
     border: 1px;
     margin-top: 100px;

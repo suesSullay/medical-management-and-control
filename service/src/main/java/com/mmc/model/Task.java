@@ -31,6 +31,7 @@ public class Task {
   private TaskType taskType;
   private Date beginTime;
   private Date endTime;
+  @Lob
   private String context;
 /**
  * json 格式

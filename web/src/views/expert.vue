@@ -1,19 +1,20 @@
 <template>
   <div class="expert">
     <el-dialog
+      :close-on-click-modal="false"
       :visible.sync="createDialog"
-      :show-close="false"
+      :show-close="true"
       width="80%"
       top="30px">
-      <el-menu default-active="1" mode="horizontal" @select="stepSelect">
+      <el-menu :default-active="step" mode="horizontal" @select="stepSelect">
         <el-menu-item index="1">基本信息</el-menu-item>
-        <el-menu-item index="2">行为记录</el-menu-item>
+        <el-menu-item index="2">工作记录</el-menu-item>
       </el-menu>
       <el-form :model="newExpert" style="margin-top:10px;height: 600px" label-width="80px"  label-position ="left" >
         <div  v-show="step=='1'" >
           <div style="display:flex;flex-direction:row">
             <div style="flex:1 ">
-              <el-form-item class="el-form-item" label="医生姓名">
+              <el-form-item class="el-form-item" label="专家姓名">
                 <el-input v-model="newExpert.name" placeholder="必填" style="width:80%"></el-input>
               </el-form-item>
               <el-form-item class="el-form-item" label="性别">
@@ -28,11 +29,8 @@
               <el-form-item class="el-form-item" label="单位" >
                 <el-input v-model="newExpert.company" placeholder="必填" style="width:80%"></el-input>
               </el-form-item>
-              <el-form-item class="el-form-item" label="职务" >
+              <el-form-item class="el-form-item" label="职务/职称" >
                 <el-input v-model="newExpert.post" placeholder="必填" style="width:80%"></el-input>
-              </el-form-item>
-              <el-form-item class="el-form-item" label="职称" >
-                <el-input v-model="newExpert.title" placeholder="必填" style="width:80%"></el-input>
               </el-form-item>
               <el-form-item class="el-form-item" label="专业" >
                 <el-input v-model="newExpert.major" placeholder="必填" style="width:80%"></el-input>
@@ -48,7 +46,7 @@
               </el-form-item>
             </div>
             <div style="flex:1">
-              <el-form-item class="el-form-item" label="备注">
+              <el-form-item class="el-form-item" label="专家简介">
                 <el-input
                   type="textarea"
                   :autosize="{ minRows: 25, maxRows: 36}"
@@ -105,8 +103,9 @@
     </el-dialog>
 
     <el-dialog
+      :close-on-click-modal="false"
       :visible.sync="createRecordDialog"
-      :show-close="false"
+      :show-close="true"
       width="60%"
       top="30px">
       <h1 style="width:100%">添加或修改出行记录</h1>
@@ -157,7 +156,9 @@
     <div class="top">
       <el-button class="create" type="primary" @click="create">添加专家</el-button>
       <el-input v-model="keyword" placeholder="输入关键字" class="keyword"></el-input>
-      <el-button type="primary">搜索</el-button>
+      <el-button type="primary" @click="queryKeyWord">搜索</el-button>
+      <uploadExcel @loaded="handleImport"></uploadExcel>
+      <el-button type="primary" @click="exportInfo">导出</el-button>
     </div>
     <el-table
       :data="expertList"
@@ -212,7 +213,14 @@
 <script>
 import moment from 'moment'
 import { mapActions } from 'vuex'
+import fileSaver from 'file-saver'
+import uploadExcel from '@/components/UploadExcel'
+import xlsxUtil from '../util/xlsxUtil.js'
+import _ from 'lodash'
 export default {
+  components: {
+    uploadExcel
+  },
   data () {
     return {
       // 添加专家
@@ -226,7 +234,7 @@ export default {
       createDialog: false,
       createRecordDialog: false,
       // 步骤
-      step: 1,
+      step: '1',
       // 查询关键字
       keyword: '',
       page: 1,
@@ -246,6 +254,94 @@ export default {
     init () {
       this.getExperList(this.name)
       this.page = 1
+    },
+    async exportInfo () {
+      let info = _.cloneDeep(this.expertList)
+      info.forEach(i => {
+        delete i.user
+        delete i.id
+        delete i.createTime
+        delete i.records
+        delete i.recordNum
+        i['姓名'] = i.name
+        i['生日'] = i.birthday
+        i['单位'] = i.company
+        i['职务/职称'] = i.post
+        i['专业'] = i.major
+        i['联系电话'] = i.tel
+        i['电子邮箱'] = i.mail
+        i['证件号码'] = i.idNo
+        i['专家简介'] = i.context
+        if (i.sex === 1) {
+          i['性别'] = '女'
+        } else {
+          i['性别'] = '男'
+        }
+        delete i.name
+        delete i.birthday
+        delete i.company
+        delete i.post
+        delete i.major
+        delete i.tel
+        delete i.mail
+        delete i.idNo
+        delete i.context
+        delete i.sex
+      })
+      const xlsx = xlsxUtil.jsonToExcel(
+        info
+      )
+      const blob = new Blob([xlsx], {
+        type: 'application/octet-stream'
+      })
+      fileSaver.saveAs(blob, '专家信息.xlsx')
+    },
+    async handleImport (arrayBuffer) {
+      const tempExpertList = await xlsxUtil.excelToJson(arrayBuffer)
+      let user = ''
+      this.findUserByName({ name: this.name }).then(async res => {
+        user = res.data.data.user
+        await tempExpertList.forEach(r => {
+          r['user'] = user
+          r.name = r['姓名']
+          r.birthday = r['生日']
+          r.company = r['单位']
+          r.post = r['职务/职称']
+          r.major = r['专业']
+          r.tel = r['联系电话']
+          r.mail = r['电子邮箱']
+          r.idNo = r['证件号码']
+          r.context = r['专家简介']
+          if (r['性别'] === '女') {
+            r.sex = 1
+          } else {
+            r.sex = 0
+          }
+          delete r['姓名']
+          delete r['生日']
+          delete r['单位']
+          delete r['职务/职称']
+          delete r['专业']
+          delete r['联系电话']
+          delete r['电子邮箱']
+          delete r['证件号码']
+          delete r['专家简介']
+          delete r['性别']
+
+          r.createTime = new Date()
+          r.records = []
+          try {
+            this.createExpert(r)
+          } catch (error) {
+            console.log(error)
+          }
+        })
+      }).then(() => {
+        this.init()
+      })
+    },
+    queryKeyWord () {
+      this.getExperList(this.name, this.keyword)
     },
     handleRecordDetails (row) {
       this.newRecord = row
@@ -336,7 +432,7 @@ export default {
       this.newExpert = {
         records: []
       }
-      this.step = 1
+      this.step = '1'
       this.createDialog = true
     },
 
@@ -376,7 +472,7 @@ export default {
     createNewExpert (isDeleteRecord) {
       console.log(isDeleteRecord)
       if (this.newExpert.name && this.newExpert.sex != null && this.newExpert.birthday &&
-            this.newExpert.company && this.newExpert.post && this.newExpert.title &&
+            this.newExpert.company && this.newExpert.post &&
             this.newExpert.major && this.newExpert.tel && this.newExpert.mail && this.newExpert.idNo) {
         if (!this.newExpert.createTime) {
           this.newExpert.createTime = new Date()

@@ -49,4 +49,9 @@ public class UserController {
 	  User user = userService.findByName(name);
 	  return Msg.success().add("user", user);
   }
+  @PostMapping("/")
+  public Msg create(@RequestBody User user) {
+	  userService.create(user);
+	  return Msg.success();
+  }
 }
