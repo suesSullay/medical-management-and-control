@@ -15,6 +15,10 @@ const actions = {
   async findUserByName ({ commit }, { name }) {
     const result = await api.user.userByName({ name })
     return result
+  },
+  async createUser ({ commit }, user) {
+    const result = await api.user.creareUser(user)
+    return result
   }
 }
 
