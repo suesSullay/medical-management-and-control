@@ -412,7 +412,7 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions(['createMessage', 'taskTypeList', 'createTaskType', 'commonUserList', 'createTask', 'findTaskList', 'deleteTask', 'downloadFile']),
+    ...mapActions(['findTaskById', 'createMessage', 'taskTypeList', 'createTaskType', 'commonUserList', 'createTask', 'findTaskList', 'deleteTask', 'downloadFile']),
     init () {
       this.getTaskTypeList()
       this.getCommonUserList()
@@ -465,37 +465,39 @@ export default {
       this.getTaskList(this.keyword, this.taskType, this.state, null, page - 1)
     },
     handleTaskDetails (row) {
-      this.reassign = false
-      this.addTaskTypeName = ''
-      this.step = '1'
-      this.detailsDialog = true
-      this.newTask = row
-      try {
-        this.newTask['files'] = JSON.parse(row.files)
-        this.newTask['users'] = JSON.parse(row.users)
-      } catch (error) {
+      this.findTaskById(row.id).then(res => {
+        this.newTask = res.data.data.task
+        this.reassign = false
+        this.addTaskTypeName = ''
+        this.step = '1'
+        this.detailsDialog = true
+        try {
+          this.newTask['files'] = JSON.parse(res.data.data.task.files)
+          this.newTask['users'] = JSON.parse(res.data.data.task.users)
+        } catch (error) {
 
-      }
-      let temp = []
-      if (this.newTask['users']) {
-        this.newTask['users'].forEach(user => {
-          if (user.name === this.user) {
-            if (user.files) {
-              temp = user.files
-            } else {
-              temp = []
+        }
+        let temp = []
+        if (this.newTask['users']) {
+          this.newTask['users'].forEach(user => {
+            if (user.name === this.user) {
+              if (user.files) {
+                temp = user.files
+              } else {
+                temp = []
+              }
+              user.isConfirm = '是'
+              this.newTask.users = JSON.stringify(this.newTask.users)
+              this.newTask.files = JSON.stringify(this.newTask.files)
+              this.createTask(this.newTask).then(res => {
+                this.newTask.users = JSON.parse(this.newTask.users)
+                this.newTask.files = JSON.parse(this.newTask.files)
+              })
             }
-            user.isConfirm = '是'
-            this.newTask.users = JSON.stringify(this.newTask.users)
-            this.newTask.files = JSON.stringify(this.newTask.files)
-            this.createTask(this.newTask).then(res => {
-              this.newTask.users = JSON.parse(this.newTask.users)
-              this.newTask.files = JSON.parse(this.newTask.files)
-            })
-          }
-        })
-        this.userFileList = temp
-      }
+          })
+          this.userFileList = temp
+        }
+      })
     },
     handleDeleteTask (row) {
       this.$confirm('此操作将永久删除该任务, 是否继续?', '提示', {

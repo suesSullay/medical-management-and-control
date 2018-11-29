@@ -30,6 +30,9 @@ public class TaskService {
   public void delete(Task task) {
 	  taskRepository.delete(task);
   }
+  public Task findById(int id) {
+	  return taskRepository.findById(id).get();
+  }
   public Page<Task> findAll(String name,int tid,String state,String user,  int page,int size) {
 	  Pageable pageable = PageRequest.of(page, size, Sort.by(new Order(Direction.DESC, "id")));
 	  Specification<Task> specification = new Specification<Task>() {

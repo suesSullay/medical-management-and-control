@@ -8,6 +8,11 @@ const actions = {
     const result = await api.task.deleteTask(task)
     return result
   },
+  async findTaskById ({ commit }, id) {
+    const result = await api.task.findTaskById({ 'id': id })
+    console.log(result)
+    return result
+  },
   async findTaskList ({ commit }, { name, tid, state, user, page, size }) {
     let options = {}
     if (name) {

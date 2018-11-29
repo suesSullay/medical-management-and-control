@@ -7,6 +7,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 import lombok.Data;
 
@@ -28,4 +29,10 @@ public class User {
   @Enumerated(EnumType.ORDINAL)
   @Column(nullable=false)
   private Rule rule;
+  
+  private String address;
+  
+  private String tel;
+  @Lob
+  private String context;
 }

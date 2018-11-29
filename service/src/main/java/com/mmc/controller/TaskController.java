@@ -41,4 +41,8 @@ public class TaskController {
 	  taskService.delete(task);
 	  return Msg.success();
   }
+  @GetMapping("/")
+  public Msg findById(@RequestParam("id") int id) {
+	return Msg.success().add("task", taskService.findById(id));
+  }
 }
