@@ -23,9 +23,14 @@ export default {
 <style>
   .sider{
     margin-top: 10px;
+    margin-left: 5px;
+    height:100%;
   }
   .sider .el-menu{
+    width: 95%;
     border: solid 1px #e6e6e6;
+    border-radius: 2px;
+    box-shadow: 1px 1px 10px #333333;
   }
   .sider .el-menu .el-menu-item{
     margin-top: 15px;

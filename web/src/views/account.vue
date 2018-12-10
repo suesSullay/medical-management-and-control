@@ -6,31 +6,31 @@
 
     <!--列表-->
     <el-table :data="userList" stripe highlight-current-row v-loading="listLoading" style="width: 100%;" height="480">
-      <el-table-column prop="name" label="单位" min-width="200">
+      <el-table-column prop="name" label="单位" min-width="280">
         <template slot-scope="scope">
           <strong v-if="scope.row.rule === 'ROOT'">{{scope.row.name}}</strong>
           <span v-else>{{scope.row.name}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="userName" label="用户名" min-width="200">
+      <el-table-column prop="userName" label="用户名" min-width="100">
         <template slot-scope="scope">
           <strong v-if="scope.row.rule === 'ROOT'">{{scope.row.userName}}</strong>
           <span v-else>{{scope.row.userName}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="rule" label="角色" min-width="120">
+      <el-table-column prop="rule" label="角色" min-width="80">
         <template slot-scope="scope">
           <span v-if="scope.row.rule === 'COMMON'">普通用户</span>
           <strong v-if="scope.row.rule === 'ROOT'">管理员</strong>
         </template>
       </el-table-column>
-      <el-table-column prop="address" label="地址" min-width="250">
+      <el-table-column prop="address" label="地址" min-width="200">
         <template slot-scope="scope">
           <strong v-if="scope.row.rule === 'ROOT'">{{scope.row.address}}</strong>
           <span v-else>{{scope.row.address}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="tel" label="电话" min-width="200"></el-table-column>
+      <el-table-column prop="tel" label="电话" min-width="120"></el-table-column>
       <el-table-column label="操作" min-width="150">
         <template slot-scope="scope">
           <el-button size="small" type="text" @click="handleEdit(scope.$index, scope.row)" style="cursor: pointer;">编辑</el-button>
@@ -51,7 +51,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="单位" prop="name">
-          <el-input v-model="editForm.name" disabled></el-input>
+          <el-input v-model="editForm.name"></el-input>
         </el-form-item>
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="editForm.userName" disabled></el-input>

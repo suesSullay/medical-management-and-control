@@ -38,8 +38,7 @@ public class FileController {
 		File fileP = new File(filePath);
 		Msg msg = Msg.success();
 		if(!fileP.exists()){
-			System.out.println(fileP);
-			fileP.mkdirs();
+			fileP.mkdir();
 		} 
 	    List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
 	    for (int i = 0; i < files.size(); i++) {

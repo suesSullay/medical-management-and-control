@@ -7,6 +7,14 @@
       width="40%"
       top="200px">
       <h1 style="margin-bottom:30px;">{{taskUserDetails.name}}提交详情</h1>
+      <el-input
+        style="margin-bottom:10px;"
+        disabled
+        type="textarea"
+        :autosize="{ minRows: 5, maxRows: 8}"
+        placeholder="请输入内容"
+        v-model="taskUserDetails.context">
+      </el-input>
       <div v-for="file in taskUserDetails.files" :key="file.value" class="file"><span>{{file.fileName}}</span>
         <el-button type="text" @click="downloadFile(file)">下载</el-button>
       </div>
@@ -98,7 +106,7 @@
               v-model="newTask.context">
             </el-input>
           </el-form-item>
-          <el-form-item style="text-align:left;">
+          <el-form-item style="text-align:center;">
             <el-upload
               v-if="rule==='ROOT'"
               ref="upload"
@@ -108,11 +116,19 @@
               <el-button size="small" type="primary">添加附件</el-button>
             </el-upload>
           </el-form-item>
-          <div v-for="file in newTask.files" :key="file.value" class="file"><span>{{file.fileName}}</span>
+          <div v-for="file in newTask.files" :key="file.value" class="file" style="margin-left:88px;"><span>{{file.fileName}}</span>
             <el-button v-if="rule==='ROOT'" type="text" @click="removeFile(file)"><i class="el-icon-close"></i></el-button>
             <el-button v-else type="text" @click="downloadFile(file)">下载</el-button>
           </div>
-          <div v-if="rule!=='ROOT'" style="text-align:left; margin:10px;">
+          <div v-if="rule!=='ROOT'" style="text-align:center; margin:10px;">
+            <div class="underLine"></div>
+            <el-input
+              style="margin-left:80px; margin-bottom:10px;"
+              type="textarea"
+              :autosize="{ minRows: 5, maxRows: 8}"
+              placeholder="请输入内容"
+              v-model="userContext">
+            </el-input>
             <el-upload
               style="margin-bottom:20px;"
               ref="upload"
@@ -121,12 +137,12 @@
               :on-success="uploadSuccessSub">
               <el-button size="small" type="primary">添加附件</el-button>
             </el-upload>
-            <div v-for="file in userFileList" :key="file.value" class="file"><span>{{file.fileName}}</span>
+            <div v-for="file in userFileList" :key="file.value" class="file" style="margin-left:88px;"><span>{{file.fileName}}</span>
               <el-button  type="text" @click="removeFileSub(file)"><i class="el-icon-close"></i></el-button>
             </div>
           </div>
 
-          <el-button v-if="rule!=='ROOT'" type="primary" @click="createNewTask">完成创建</el-button>
+          <el-button v-if="rule!=='ROOT'" type="primary" @click="createNewTask">确认</el-button>
         </div>
         <div v-show="step=='2'&&!reassign" style="text-align: left; margin:10px;"><el-button type="primary" @click="reassignClick">重新指派</el-button></div>
         <el-table
@@ -184,7 +200,7 @@
         </el-table>
         <div v-show="step=='2'&&!reassign" style="margin-top:10px;">
           <el-button @click="detailsDialog=false">取消</el-button>
-          <el-button type="primary" @click="createNewTask">完成创建</el-button>
+          <el-button type="primary" @click="createNewTask">确认</el-button>
         </div>
       </el-form>
     </el-dialog>
@@ -238,7 +254,7 @@
               v-model="newTask.context">
             </el-input>
           </el-form-item>
-          <el-form-item style="text-align:left;">
+          <el-form-item style="text-align:center;">
             <el-upload
               ref="upload"
               :action="FileBase"
@@ -247,7 +263,7 @@
               <el-button size="small" type="primary">添加附件</el-button>
             </el-upload>
           </el-form-item>
-          <div v-for="file in newTask.files" :key="file.value" class="file"><span>{{file.fileName}}</span>
+          <div v-for="file in newTask.files" :key="file.value" class="file" style="margin-left:88px;"><span>{{file.fileName}}</span>
             <el-button v-if="rule==='ROOT'" type="text" @click="removeFile(file)"><i class="el-icon-close"></i></el-button>
             <el-button v-else type="text" @click="downloadFile(file)">下载</el-button>
           </div>
@@ -306,11 +322,26 @@
       :data="taskList"
       style="width: 100%">
       <el-table-column
+        v-if="rule=='ROOT'"
         prop="name"
         label="任务名"
-        width="220">
+        width="300">
       </el-table-column>
       <el-table-column
+        v-else
+        prop="name"
+        label="任务名"
+        width="500">
+      </el-table-column>
+      <el-table-column
+        v-if="rule=='ROOT'"
+        :formatter="timeFormatter"
+        prop="updateTime"
+        label="修改时间"
+        width="300">
+      </el-table-column>
+      <el-table-column
+        v-else
         :formatter="timeFormatter"
         prop="updateTime"
         label="修改时间"
@@ -322,6 +353,7 @@
         width="220">
       </el-table-column>
       <el-table-column
+        v-if="rule=='ROOT'"
         label="提交情况"
         width="220">
         <template slot-scope="scope">
@@ -385,7 +417,8 @@ export default {
       user: '',
       taskListNum: 0,
       taskUserDetails: '',
-      userFileList: []
+      userFileList: [],
+      userContext: ''
     }
   },
   computed: {
@@ -486,13 +519,17 @@ export default {
               } else {
                 temp = []
               }
-              user.isConfirm = '是'
-              this.newTask.users = JSON.stringify(this.newTask.users)
-              this.newTask.files = JSON.stringify(this.newTask.files)
-              this.createTask(this.newTask).then(res => {
-                this.newTask.users = JSON.parse(this.newTask.users)
-                this.newTask.files = JSON.parse(this.newTask.files)
-              })
+              this.userContext = user.context
+              // 是否查看
+              if (user.isConfirm !== '是') {
+                user.isConfirm = '是'
+                this.newTask.users = JSON.stringify(this.newTask.users)
+                this.newTask.files = JSON.stringify(this.newTask.files)
+                this.createTask(this.newTask).then(res => {
+                  this.newTask.users = JSON.parse(this.newTask.users)
+                  this.newTask.files = JSON.parse(this.newTask.files)
+                })
+              }
             }
           })
           this.userFileList = temp
@@ -720,6 +757,14 @@ export default {
         if (!this.newTask.endNum) {
           this.newTask.endNum = 0
         }
+        // 分中心备注
+        if (this.newTask['users'] && this.userContext) {
+          this.newTask['users'].forEach(user => {
+            if (user.name === this.user) {
+              user.context = this.userContext
+            }
+          })
+        }
         let temp = _.cloneDeep(this.newTask)
         // this.newTask.users = JSON.stringify(this.newTask.users)
         // this.newTask.files = JSON.stringify(this.newTask.files)
@@ -755,6 +800,7 @@ export default {
   }
 }
 </script>
+
 <style>
   .task .top{
     display: flex;
@@ -792,5 +838,11 @@ export default {
   }
   .task .el-upload-list__item{
     display: none;
+  }
+  .task .underLine{
+    margin: 10px auto;
+    width:100%;
+    height:3px;
+    background:linear-gradient(270deg,rgba(166,187,200,0.2) 0%,rgba(166,187,200,1) 52%,rgba(166,187,200,0.2) 100%);
   }
 </style>

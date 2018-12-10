@@ -44,7 +44,7 @@
       <el-button v-if="rule==='ROOT'" type="primary" @click="createNewCallBoard">完成创建</el-button>
     </el-dialog>
     <div class="top">
-      <el-button class="create" type="primary" @click="create" v-if="rule==='ROOT'">添加素材</el-button>
+      <el-button class="create" type="primary" @click="create" v-if="rule==='ROOT'">添加公告</el-button>
       <el-input v-model="keyword" placeholder="输入关键字" class="keyword" v-if="rule!=='ROOT'" style="margin-left:898px;"></el-input>
       <el-input v-model="keyword" placeholder="输入关键字" class="keyword" v-else style="margin-left:748px;"></el-input>
       <el-button type="primary" @click="selectCommitUser">查询</el-button>

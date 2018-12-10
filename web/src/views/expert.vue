@@ -56,7 +56,8 @@
               </el-form-item>
             </div>
           </div>
-          <el-button  type="primary" @click="createNewExpert(false)">完成创建</el-button>
+          <el-button v-if="rule==='ROOT'" type="primary" @click="createNewExpert(false)">完成创建</el-button>
+          <el-button v-else type="primary" @click="createNewExpert(false)">确认</el-button>
         </div>
         <div v-show="step=='2'" class="top" style="display:flex;flex-direction:column">
           <div style="width: 100%; text-align:left;">

@@ -51,4 +51,15 @@ export default {
   .app .el-header{
     padding: 0 0;
   }
+  .app{
+    height: 100%;
+  }
+  .app .el-container{
+    height: 100%;
+  }
+  .app .el-main{
+    border-radius: 2px;
+    box-shadow: 1px 1px 10px #333333;
+    margin: 10px 10px 10px 0;
+  }
 </style>
