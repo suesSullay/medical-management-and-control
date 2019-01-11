@@ -27,8 +27,9 @@
             v-model="newNotice.context">
           </el-input>
         </el-form-item>
-        <el-form-item style="text-align:left;">
+        <el-form-item style="text-align:left;" label="附件列表">
           <el-upload
+            style="margin-left:88px;"
             v-if="rule!=='ROOT'"
             ref="upload"
             :action="FileBase"
@@ -36,7 +37,7 @@
             <el-button size="small" type="primary">添加附件</el-button>
           </el-upload>
         </el-form-item>
-        <div v-for="file in newNotice.files" :key="file.value" class="file"><span>{{file.fileName}}</span>
+        <div v-for="file in newNotice.files" :key="file.value" class="file" style="margin-left:88px;"><span>{{file.fileName}}</span>
           <el-button v-if="rule!=='ROOT'" type="text" @click="removeFile(file)"><i class="el-icon-close"></i></el-button>
           <el-button v-else type="text" @click="downloadFile(file)">下载</el-button>
         </div>
@@ -62,7 +63,7 @@
       style="width: 100%">
       <el-table-column
         prop="name"
-        label="任务名"
+        label="过程名"
         width="350">
       </el-table-column>
       <el-table-column

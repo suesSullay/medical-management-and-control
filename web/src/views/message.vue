@@ -14,7 +14,7 @@
     style="width: 100%">
       <el-table-column
         prop="content"
-        label="任务名"
+        label="通知名"
         width="1000">
       </el-table-column>
       <el-table-column

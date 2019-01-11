@@ -106,8 +106,9 @@
               v-model="newTask.context">
             </el-input>
           </el-form-item>
-          <el-form-item style="text-align:center;">
+          <el-form-item style="text-align:left;" label="附件列表">
             <el-upload
+              class="upload"
               v-if="rule==='ROOT'"
               ref="upload"
               :action="FileBase"
@@ -120,7 +121,7 @@
             <el-button v-if="rule==='ROOT'" type="text" @click="removeFile(file)"><i class="el-icon-close"></i></el-button>
             <el-button v-else type="text" @click="downloadFile(file)">下载</el-button>
           </div>
-          <div v-if="rule!=='ROOT'" style="text-align:center; margin:10px;">
+          <div v-if="rule!=='ROOT'" style="text-align:left; margin:10px;">
             <div class="underLine"></div>
             <el-input
               style="margin-left:80px; margin-bottom:10px;"
@@ -130,7 +131,7 @@
               v-model="userContext">
             </el-input>
             <el-upload
-              style="margin-bottom:20px;"
+              style="margin-bottom:20px; margin-left:80px;"
               ref="upload"
               :action="FileBase"
               :before-remove="fileBeforeRemoveSub"
@@ -254,8 +255,9 @@
               v-model="newTask.context">
             </el-input>
           </el-form-item>
-          <el-form-item style="text-align:center;">
+          <el-form-item style="text-align:left;" label="附件列表">
             <el-upload
+              class="upload"
               ref="upload"
               :action="FileBase"
               :before-remove="fileBeforeRemove"
@@ -844,5 +846,8 @@ export default {
     width:100%;
     height:3px;
     background:linear-gradient(270deg,rgba(166,187,200,0.2) 0%,rgba(166,187,200,1) 52%,rgba(166,187,200,0.2) 100%);
+  }
+  .task .upload{
+    margin-left: 88px;
   }
 </style>

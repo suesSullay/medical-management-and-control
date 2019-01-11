@@ -1,6 +1,10 @@
 <template>
   <div class="header">
-    <span>{{name}}</span>
+    <div class="type">
+      <div>四川省中医医疗管理控制系统</div>
+      <div>{{type}}</div>
+    </div>
+    <div class="name">{{name}}</div>
   </div>
 </template>
 <script>
@@ -12,6 +16,9 @@ export default {
   computed: {
     name: function () {
       return sessionStorage.getItem('name')
+    },
+    type: function () {
+      return sessionStorage.getItem('rule') === 'ROOT' ? '管控中心版本' : '分中心版本'
     }
   }
 }
@@ -25,12 +32,24 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: flex-start;
+    justify-content:space-between;
   }
-  .header span{
+  .header .name{
     font-size: 30px;
     color: #FFFFFF;
     letter-spacing: 3px;
     margin-left: 8.4%;
+    padding: 40px;
+  }
+  .header .type{
+    color: #FFFFFF;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .header .type div:first-child{
+    font-size: 20px;
   }
 </style>

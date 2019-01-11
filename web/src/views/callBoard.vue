@@ -6,7 +6,7 @@
       width="80%"
       top="50px">
       <el-form :model="newCallBoard" style="margin-top:10px;">
-        <el-form-item label="任务名称" style="display:inline-block; width:100%">
+        <el-form-item label="公告名称" style="display:inline-block; width:100%">
           <el-input v-model="newCallBoard.name" placeholder="必填" style="width:91%" v-if="rule==='ROOT'"></el-input>
           <el-input v-model="newCallBoard.name" placeholder="必填" style="width:91%" v-else disabled></el-input>
         </el-form-item>
@@ -27,8 +27,9 @@
             v-model="newCallBoard.context">
           </el-input>
         </el-form-item>
-        <el-form-item style="text-align:left;">
+        <el-form-item style="text-align:left;" label="附件列表">
           <el-upload
+            style="margin-left:88px;"
             v-if="rule==='ROOT'"
             ref="upload"
             :action="FileBase"
@@ -36,7 +37,7 @@
             <el-button size="small" type="primary">添加附件</el-button>
           </el-upload>
         </el-form-item>
-        <div v-for="file in newCallBoard.files" :key="file.value" class="file"><span>{{file.fileName}}</span>
+        <div v-for="file in newCallBoard.files" :key="file.value" class="file" style="margin-left:88px;"><span>{{file.fileName}}</span>
           <el-button v-if="rule==='ROOT'" type="text" @click="removeFile(file)"><i class="el-icon-close"></i></el-button>
           <el-button v-else type="text" @click="downloadFile(file)">下载</el-button>
         </div>
@@ -54,7 +55,7 @@
       style="width: 100%">
       <el-table-column
         prop="name"
-        label="任务名"
+        label="公告名"
         width="520">
       </el-table-column>
       <el-table-column

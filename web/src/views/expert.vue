@@ -156,7 +156,16 @@
 
     <div class="top">
       <el-button class="create" type="primary" @click="create">添加专家</el-button>
-      <el-input v-model="keyword" placeholder="输入关键字" class="keyword"></el-input>
+      <el-select v-model="commitUser" placeholder="提交机构" class="task-type" @change="selectCommitUser" v-if="rule==='ROOT'" style="margin-left:494px;">
+        <el-option
+          v-for="item in userList"
+          :key="item.id"
+          :label="item.name"
+          :value="item.name">
+        </el-option>
+      </el-select>
+      <el-input v-model="keyword" placeholder="输入关键字" class="keyword" v-if="rule!=='ROOT'"></el-input>
+      <el-input v-model="keyword" placeholder="输入关键字" class="keyword" v-else style="margin-left:0px;"></el-input>
       <el-button type="primary" @click="queryKeyWord">搜索</el-button>
       <uploadExcel @loaded="handleImport"></uploadExcel>
       <el-button type="primary" @click="exportInfo">导出</el-button>
@@ -167,18 +176,18 @@
       <el-table-column
         prop="name"
         label="姓名"
-        width="200">
+        width="100">
       </el-table-column>
       <el-table-column
         prop="sex"
         label="性别"
-        width="200"
+        width="80"
         :formatter="sexFormatter">
       </el-table-column>
       <el-table-column
         prop="birthday"
         label="出生年月"
-        width="250">
+        width="200">
       </el-table-column>
       <el-table-column
         prop="company"
@@ -188,7 +197,12 @@
       <el-table-column
         prop="recordNum"
         label="出行记录"
-        width="200">
+        width="80">
+      </el-table-column>
+      <el-table-column
+        prop="user.name"
+        label="创建单位"
+        width="390">
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -241,7 +255,9 @@ export default {
       page: 1,
       rule: '',
       name: '',
-      expertList: []
+      expertList: [],
+      userList: [],
+      commitUser: ''
     }
   },
   mounted () {
@@ -250,9 +266,12 @@ export default {
     this.init()
   },
   methods: {
-    ...mapActions(['createMessage', 'createExpert', 'deleteExpert', 'findExpertList', 'findUserByName']),
+    ...mapActions(['createMessage', 'createExpert', 'deleteExpert', 'findExpertList', 'findUserByName', 'findUserList']),
 
     init () {
+      this.findUserList().then(res => {
+        this.userList = res.data.data.userList
+      })
       this.getExperList(this.name)
       this.page = 1
     },
@@ -341,8 +360,15 @@ export default {
         this.init()
       })
     },
+    selectCommitUser () {
+      this.getExperList(this.commitUser, this.keyword)
+    },
     queryKeyWord () {
-      this.getExperList(this.name, this.keyword)
+      if (this.commitUser) {
+        this.getExperList(this.commitUser, this.keyword)
+      } else {
+        this.getExperList(this.name, this.keyword)
+      }
     },
     handleRecordDetails (row) {
       this.newRecord = row
@@ -413,7 +439,11 @@ export default {
       })
     },
     currentChange () {
-      this.getExperList(this.name, this.keyword, this.page - 1)
+      if (this.commitUser) {
+        this.getExperList(this.commitUser, this.keyword, this.page - 1)
+      } else {
+        this.getExperList(this.name, this.keyword, this.page - 1)
+      }
     },
     timeFormatter (row, column, cellValue, index) {
       console.log(this.newExpert)
@@ -541,10 +571,10 @@ export default {
   }
   .expert .keyword{
     width: 200px;
-    margin-left: 748px;
+    margin-left: 648px;
   }
   .expert .task-type{
-    margin-left: 300px;
+    margin-left: 200px;
   }
   .expert .el-form-item{
     margin-bottom: 15px;
