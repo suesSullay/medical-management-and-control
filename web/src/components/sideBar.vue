@@ -30,7 +30,7 @@ export default {
     width: 95%;
     border: solid 1px #e6e6e6;
     border-radius: 2px;
-    box-shadow: 1px 1px 15px gray;
+    box-shadow: 1px 1px 15px #778899;
   }
   .sider .el-menu .el-menu-item{
     margin-top: 15px;

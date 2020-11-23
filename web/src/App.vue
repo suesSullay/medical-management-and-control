@@ -59,7 +59,7 @@ export default {
   }
   .app .el-main{
     border-radius: 2px;
-    box-shadow: 1px 1px 10px #333333;
+    box-shadow: 1px 1px 10px #778899;
     margin: 10px 10px 10px 0;
   }
 </style>

@@ -116,6 +116,16 @@
               :on-success="uploadSuccess">
               <el-button size="small" type="primary">添加附件</el-button>
             </el-upload>
+            <el-upload
+              disabled
+              class="upload"
+              v-else
+              ref="upload"
+              :action="FileBase"
+              :before-remove="fileBeforeRemove"
+              :on-success="uploadSuccess">
+              <el-button size="small" type="primary" disabled>添加附件</el-button>
+            </el-upload>
           </el-form-item>
           <div v-for="file in newTask.files" :key="file.value" class="file" style="margin-left:88px;"><span>{{file.fileName}}</span>
             <el-button v-if="rule==='ROOT'" type="text" @click="removeFile(file)"><i class="el-icon-close"></i></el-button>
